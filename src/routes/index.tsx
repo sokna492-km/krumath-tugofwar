@@ -53,7 +53,6 @@ function Index() {
   const [lastPuller, setLastPuller] = useState<Side | null>(null);
   const [winner, setWinner] = useState<Side | null>(null);
 
-  const updateSide = side === undefined ? undefined : undefined; // placeholder removed below
 
   const setSide = useCallback(
     (side: Side, updater: (s: SideState) => SideState) => {

@@ -42,8 +42,8 @@ type SideState = {
   shaking: boolean;
 };
 
-const freshSide = (): SideState => ({
-  question: makeQuestion(),
+const freshSide = (band: GradeBand): SideState => ({
+  question: makeQuestion(band),
   input: "",
   score: 0,
   shaking: false,
@@ -52,8 +52,9 @@ const freshSide = (): SideState => ({
 const CONFETTI = Array.from({ length: 24 }, (_, i) => i);
 
 function Index() {
-  const [blue, setBlue] = useState<SideState>(freshSide);
-  const [red, setRed] = useState<SideState>(freshSide);
+  const [band, setBand] = useState<GradeBand>("4-5");
+  const [blue, setBlue] = useState<SideState>(() => freshSide("4-5"));
+  const [red, setRed] = useState<SideState>(() => freshSide("4-5"));
   const [position, setPosition] = useState(0);
   const [pullKey, setPullKey] = useState(0);
   const [lastPuller, setLastPuller] = useState<Side | null>(null);
@@ -79,6 +80,23 @@ function Index() {
     setSide(side, (s) => ({ ...s, input: "" }));
   };
 
+  const handleToggleSign = (side: Side) => {
+    if (winner) return;
+    setSide(side, (s) => ({
+      ...s,
+      input: s.input.startsWith("-") ? s.input.slice(1) : `-${s.input}`,
+    }));
+  };
+
+  const handleGradeChange = (next: GradeBand) => {
+    setBand(next);
+    setPosition(0);
+    setWinner(null);
+    setLastPuller(null);
+    setBlue((s) => ({ ...freshSide(next), score: s.score }));
+    setRed((s) => ({ ...freshSide(next), score: s.score }));
+  };
+
   const handleSubmit = (side: Side) => {
     if (winner) return;
     const state = side === "blue" ? blue : red;
@@ -90,7 +108,7 @@ function Index() {
       setPosition(next);
       setPullKey((k) => k + 1);
       setLastPuller(side);
-      setSide(side, (s) => ({ ...s, input: "", question: makeQuestion() }));
+      setSide(side, (s) => ({ ...s, input: "", question: makeQuestion(band) }));
       if (Math.abs(next) >= WIN_PULLS) {
         setWinner(side);
         setSide(side, (s) => ({ ...s, score: s.score + 1 }));
@@ -105,16 +123,16 @@ function Index() {
     setPosition(0);
     setWinner(null);
     setLastPuller(null);
-    setBlue((s) => ({ ...freshSide(), score: s.score }));
-    setRed((s) => ({ ...freshSide(), score: s.score }));
+    setBlue((s) => ({ ...freshSide(band), score: s.score }));
+    setRed((s) => ({ ...freshSide(band), score: s.score }));
   };
 
   const resetAll = () => {
     setPosition(0);
     setWinner(null);
     setLastPuller(null);
-    setBlue(freshSide());
-    setRed(freshSide());
+    setBlue(freshSide(band));
+    setRed(freshSide(band));
   };
 
   return (
@@ -133,6 +151,30 @@ function Index() {
         </button>
       </header>
 
+      <div
+        role="group"
+        aria-label="Grade level"
+        className="flex flex-wrap items-center justify-center gap-1.5 rounded-full bg-card px-3 py-2 shadow-md ring-1 ring-border"
+      >
+        <GraduationCap className="mr-1 size-5 text-muted-foreground" />
+        <span className="mr-1 text-sm font-bold text-muted-foreground">Grade</span>
+        {GRADE_BANDS.map((g) => (
+          <button
+            key={g.id}
+            type="button"
+            onClick={() => handleGradeChange(g.id)}
+            aria-pressed={band === g.id}
+            className={`rounded-full px-3.5 py-1.5 text-sm font-extrabold transition-all ${
+              band === g.id
+                ? "bg-primary text-primary-foreground shadow-[0_2px_0_var(--color-team-blue-deep)]"
+                : "text-muted-foreground hover:bg-secondary"
+            }`}
+          >
+            {g.label}
+          </button>
+        ))}
+      </div>
+
       <div className="flex w-full max-w-6xl flex-col items-center gap-4 sm:gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
         <div className="flex justify-center lg:justify-end">
           <PlayerPanel
@@ -143,9 +185,11 @@ function Index() {
             score={blue.score}
             shaking={blue.shaking}
             disabled={!!winner}
+            allowNegative={bandAllowsNegative(band)}
             onDigit={(d) => handleDigit("blue", d)}
             onClear={() => handleClear("blue")}
             onSubmit={() => handleSubmit("blue")}
+            onToggleSign={() => handleToggleSign("blue")}
           />
         </div>
 
@@ -162,9 +206,11 @@ function Index() {
             score={red.score}
             shaking={red.shaking}
             disabled={!!winner}
+            allowNegative={bandAllowsNegative(band)}
             onDigit={(d) => handleDigit("red", d)}
             onClear={() => handleClear("red")}
             onSubmit={() => handleSubmit("red")}
+            onToggleSign={() => handleToggleSign("red")}
           />
         </div>
       </div>

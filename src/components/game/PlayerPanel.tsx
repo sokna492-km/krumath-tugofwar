@@ -9,9 +9,11 @@ type PlayerPanelProps = {
   score: number;
   shaking: boolean;
   disabled: boolean;
+  allowNegative: boolean;
   onDigit: (digit: string) => void;
   onClear: () => void;
   onSubmit: () => void;
+  onToggleSign: () => void;
 };
 
 export function PlayerPanel({
@@ -22,9 +24,11 @@ export function PlayerPanel({
   score,
   shaking,
   disabled,
+  allowNegative,
   onDigit,
   onClear,
   onSubmit,
+  onToggleSign,
 }: PlayerPanelProps) {
   const isBlue = accent === "blue";
   return (
@@ -67,9 +71,11 @@ export function PlayerPanel({
         <Keypad
           accent={accent}
           disabled={disabled}
+          allowNegative={allowNegative}
           onDigit={onDigit}
           onClear={onClear}
           onSubmit={onSubmit}
+          onToggleSign={onToggleSign}
         />
       </div>
     </section>

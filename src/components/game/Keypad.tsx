@@ -6,13 +6,26 @@ type KeypadProps = {
   onSubmit: () => void;
   accent: "blue" | "red";
   disabled?: boolean;
+  allowNegative?: boolean;
+  onToggleSign?: () => void;
 };
 
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-export function Keypad({ onDigit, onClear, onSubmit, accent, disabled }: KeypadProps) {
+export function Keypad({ onDigit, onClear, onSubmit, accent, disabled, allowNegative, onToggleSign }: KeypadProps) {
   return (
     <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      {allowNegative && (
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onToggleSign}
+          aria-label="Toggle negative sign"
+          className="col-span-3 rounded-xl bg-secondary py-2 text-2xl font-bold text-secondary-foreground shadow-[0_3px_0_var(--color-border)] transition-transform duration-100 hover:brightness-95 active:translate-y-0.5 active:shadow-none disabled:opacity-50"
+        >
+          ±
+        </button>
+      )}
       {keys.map((k) => (
         <button
           key={k}

@@ -1,7 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
-import { RotateCcw, Trophy } from "lucide-react";
-import { makeQuestion, type Question } from "@/lib/math";
+import { GraduationCap, RotateCcw, Trophy } from "lucide-react";
+import {
+  GRADE_BANDS,
+  bandAllowsNegative,
+  makeQuestion,
+  type GradeBand,
+  type Question,
+} from "@/lib/math";
 import { PlayerPanel } from "@/components/game/PlayerPanel";
 import { Rope, WIN_PULLS } from "@/components/game/Rope";
 

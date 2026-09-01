@@ -26,9 +26,8 @@ export function Rope({ position, pullKey, lastPuller }: RopeProps) {
         className="relative flex w-full max-w-2xl items-end justify-between transition-transform duration-500 ease-out"
         style={{ transform: `translateX(${pct}%)` }}
       >
-        {/* one single straight rope spanning the whole arena, behind the kids
-            (drawn rope segments inside the artwork continue it at ~42% height) */}
-        <div className="absolute inset-x-0 top-[42.5%] z-0 -translate-y-1/2">
+        {/* one single straight rope spanning the whole arena, behind the kids */}
+        <div className="absolute inset-x-0 top-[43.5%] z-0 -translate-y-1/2">
           <div
             className="h-1 w-full rounded-full shadow-sm sm:h-1.5"
             style={{

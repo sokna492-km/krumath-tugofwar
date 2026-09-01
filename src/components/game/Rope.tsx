@@ -16,10 +16,10 @@ export function Rope({ position, pullKey, lastPuller }: RopeProps) {
   return (
     <div className="relative flex h-44 w-full items-center justify-center overflow-visible sm:h-56">
       {/* ground */}
-      <div className="absolute inset-x-0 bottom-4 h-3 rounded-full bg-field" />
+      <div className="absolute inset-x-0 bottom-3 h-3.5 rounded-full bg-field shadow-inner" />
 
       {/* center line */}
-      <div className="absolute bottom-4 top-0 left-1/2 w-1 -translate-x-1/2 rounded-full bg-sun" />
+      <div className="absolute bottom-3 top-0 left-1/2 w-1 -translate-x-1/2 rounded-full bg-sun shadow-sm" />
 
       {/* moving group: characters + rope + marker */}
       <div
@@ -37,12 +37,20 @@ export function Rope({ position, pullKey, lastPuller }: RopeProps) {
           }`}
         />
 
-        {/* rope with marker */}
-        <div className="relative mx-1 h-2 flex-1 rounded-full bg-amber-900/80 sm:mx-2">
+        {/* twisted rope with marker, aligned with the characters' hands */}
+        <div className="relative mx-[-18px] flex-1 -translate-y-2 sm:mx-[-26px] sm:-translate-y-3">
+          <div
+            className="h-2.5 w-full rounded-full shadow-md sm:h-3.5"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(55deg, oklch(0.68 0.12 80) 0px, oklch(0.68 0.12 80) 5px, oklch(0.55 0.1 72) 5px, oklch(0.55 0.1 72) 10px)",
+            }}
+          />
+          {/* marker ring + flag at rope center */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="flex flex-col items-center">
-              <Flag className="size-6 fill-team-red text-team-red sm:size-8" />
-              <div className="h-4 w-1 rounded-full bg-amber-900/80" />
+              <Flag className="size-7 fill-team-red text-team-red drop-shadow sm:size-9" />
+              <div className="size-4 rounded-full border-[3px] border-team-red bg-card shadow sm:size-5" />
             </div>
           </div>
         </div>

@@ -193,7 +193,7 @@ function Index() {
           />
         </div>
 
-        <div className="w-full max-w-md lg:w-72 xl:w-96">
+        <div className="w-full max-w-md lg:w-96 xl:w-[30rem]">
           <Rope position={position} pullKey={pullKey} lastPuller={lastPuller} />
         </div>
 

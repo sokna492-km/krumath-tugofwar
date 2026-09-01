@@ -34,7 +34,7 @@ export function PlayerPanel({
   return (
     <section
       aria-label={`${name} panel`}
-      className={`w-full max-w-md overflow-hidden rounded-3xl bg-card shadow-xl ring-1 ring-border ${
+      className={`w-full max-w-lg overflow-hidden rounded-3xl bg-card shadow-xl ring-1 ring-border ${
         shaking ? "animate-shake" : ""
       }`}
     >

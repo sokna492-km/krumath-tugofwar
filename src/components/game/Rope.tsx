@@ -23,7 +23,7 @@ export function Rope({ position, pullKey, lastPuller }: RopeProps) {
 
       {/* moving group: characters + rope + marker */}
       <div
-        className="relative flex w-full max-w-lg items-center justify-between transition-transform duration-500 ease-out"
+        className="relative flex w-full max-w-2xl items-center justify-between transition-transform duration-500 ease-out"
         style={{ transform: `translateX(${pct}%)` }}
       >
         <img

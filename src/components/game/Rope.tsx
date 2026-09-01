@@ -38,12 +38,12 @@ export function Rope({ position, pullKey, lastPuller }: RopeProps) {
         />
 
         {/* twisted rope with marker, aligned with the characters' hands */}
-        <div className="relative mx-[-18px] flex-1 -translate-y-2 sm:mx-[-26px] sm:-translate-y-3">
+        <div className="relative mx-[-14px] flex-1 -translate-y-1.5 sm:mx-[-20px] sm:-translate-y-2">
           <div
-            className="h-2.5 w-full rounded-full shadow-md sm:h-3.5"
+            className="h-1.5 w-full rounded-full shadow-sm sm:h-2"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(55deg, oklch(0.68 0.12 80) 0px, oklch(0.68 0.12 80) 5px, oklch(0.55 0.1 72) 5px, oklch(0.55 0.1 72) 10px)",
+                "repeating-linear-gradient(55deg, oklch(0.68 0.12 80) 0px, oklch(0.68 0.12 80) 4px, oklch(0.55 0.1 72) 4px, oklch(0.55 0.1 72) 8px)",
             }}
           />
           {/* marker ring + flag at rope center */}

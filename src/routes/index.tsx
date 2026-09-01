@@ -137,7 +137,7 @@ function Index() {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center gap-4 overflow-hidden bg-background px-3 py-4 sm:gap-6 sm:px-6 sm:py-8">
-      <header className="flex w-full max-w-6xl items-center justify-between">
+      <header className="flex w-full max-w-7xl items-center justify-between">
         <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           Math Tug of War
         </h1>
@@ -175,7 +175,7 @@ function Index() {
         ))}
       </div>
 
-      <div className="flex w-full max-w-6xl flex-col items-center gap-4 sm:gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+      <div className="flex w-full max-w-7xl flex-col items-center gap-4 sm:gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
         <div className="flex justify-center lg:justify-end">
           <PlayerPanel
             name="Blue"
@@ -193,7 +193,7 @@ function Index() {
           />
         </div>
 
-        <div className="w-full max-w-md lg:w-72 xl:w-96">
+        <div className="w-full max-w-md lg:w-96 xl:w-[30rem]">
           <Rope position={position} pullKey={pullKey} lastPuller={lastPuller} />
         </div>
 

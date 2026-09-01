@@ -40,10 +40,10 @@ export function Rope({ position, pullKey, lastPuller }: RopeProps) {
         {/* twisted rope with marker, aligned with the characters' hands */}
         <div className="relative mx-[-14px] flex-1 -translate-y-1.5 sm:mx-[-20px] sm:-translate-y-2">
           <div
-            className="h-1.5 w-full rounded-full shadow-sm sm:h-2"
+            className="h-1 w-full rounded-full shadow-sm"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(55deg, oklch(0.68 0.12 80) 0px, oklch(0.68 0.12 80) 4px, oklch(0.55 0.1 72) 4px, oklch(0.55 0.1 72) 8px)",
+                "repeating-linear-gradient(55deg, oklch(0.68 0.12 80) 0px, oklch(0.68 0.12 80) 3px, oklch(0.55 0.1 72) 3px, oklch(0.55 0.1 72) 6px)",
             }}
           />
           {/* marker ring + flag at rope center */}

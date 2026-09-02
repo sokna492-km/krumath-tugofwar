@@ -5,7 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-display: "Baloo 2", "Comic Sans MS", ui-rounded, system-ui, sans-serif;
+  --font-display: "Baloo 2", "Kantumruy Pro", "Comic Sans MS", ui-rounded, system-ui, sans-serif;
+  --font-khmer: "Kantumruy Pro", sans-serif;
 }
 
 @theme inline {
@@ -108,6 +109,10 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-display);
+  }
+
+  :lang(km) {
+    font-family: var(--font-khmer);
   }
 }
 

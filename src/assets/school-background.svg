@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <!--
+    Soft schoolyard backdrop for KruMath tug-of-war.
+    Style derived from Kenney.nl CC0 Background Elements (attribution optional).
+    Sky, clouds, and grass only; soft palette behind gameplay.
+  -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d9eaf4"/>
+      <stop offset="55%" stop-color="#eef4f0"/>
+      <stop offset="100%" stop-color="#f6f3eb"/>
+    </linearGradient>
+    <linearGradient id="grassFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c9dfb8"/>
+      <stop offset="100%" stop-color="#b7d4a4"/>
+    </linearGradient>
+    <linearGradient id="grassNear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8d5a6"/>
+      <stop offset="100%" stop-color="#a8c994"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1440" height="900" fill="url(#sky)"/>
+
+  <g fill="#f7fbfc" opacity="0.85">
+    <ellipse cx="180" cy="110" rx="90" ry="36"/>
+    <ellipse cx="240" cy="100" rx="70" ry="30"/>
+    <ellipse cx="120" cy="118" rx="55" ry="24"/>
+    <ellipse cx="1180" cy="90" rx="100" ry="38"/>
+    <ellipse cx="1250" cy="82" rx="72" ry="28"/>
+    <ellipse cx="1110" cy="100" rx="60" ry="24"/>
+    <ellipse cx="720" cy="70" rx="80" ry="26" opacity="0.7"/>
+    <ellipse cx="780" cy="78" rx="55" ry="20" opacity="0.7"/>
+  </g>
+
+  <path
+    d="M0 500 C180 460 320 480 420 510 C520 540 580 525 720 535 C860 545 920 520 1020 505 C1160 485 1300 480 1440 510 L1440 900 L0 900 Z"
+    fill="url(#grassFar)"
+    opacity="0.4"
+  />
+
+  <path
+    d="M0 640 C200 610 380 630 520 655 C660 680 780 670 920 660 C1080 645 1260 630 1440 655 L1440 900 L0 900 Z"
+    fill="url(#grassNear)"
+    opacity="0.55"
+  />
+  <ellipse cx="720" cy="740" rx="480" ry="110" fill="#d7e8c8" opacity="0.28"/>
+</svg>

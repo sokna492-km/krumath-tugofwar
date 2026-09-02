@@ -1,4 +1,5 @@
 import { Delete, Check } from "lucide-react";
+import { km } from "@/lib/copy-km";
 
 type KeypadProps = {
   onDigit: (digit: string) => void;
@@ -12,16 +13,31 @@ type KeypadProps = {
 
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-export function Keypad({ onDigit, onClear, onSubmit, accent, disabled, allowNegative, onToggleSign }: KeypadProps) {
+const keyBase =
+  "flex min-h-0 h-full items-center justify-center rounded-xl font-bold shadow-[0_3px_0_var(--color-border)] transition-transform duration-100 hover:brightness-95 active:translate-y-0.5 active:shadow-none disabled:opacity-50 text-[clamp(1rem,3.2vh,1.875rem)]";
+
+export function Keypad({
+  onDigit,
+  onClear,
+  onSubmit,
+  accent,
+  disabled,
+  allowNegative,
+  onToggleSign,
+}: KeypadProps) {
   return (
-    <div className="grid grid-cols-3 gap-2 sm:gap-3">
+    <div
+      className={`grid h-full min-h-0 grid-cols-3 gap-1.5 sm:gap-2 ${
+        allowNegative ? "grid-rows-5" : "grid-rows-4"
+      }`}
+    >
       {allowNegative && (
         <button
           type="button"
           disabled={disabled}
           onClick={onToggleSign}
-          aria-label="Toggle negative sign"
-          className="col-span-3 rounded-xl bg-secondary py-2 text-2xl font-bold text-secondary-foreground shadow-[0_3px_0_var(--color-border)] transition-transform duration-100 hover:brightness-95 active:translate-y-0.5 active:shadow-none disabled:opacity-50"
+          aria-label={km.toggleSign}
+          className={`${keyBase} col-span-3 bg-secondary text-secondary-foreground`}
         >
           ±
         </button>
@@ -32,7 +48,7 @@ export function Keypad({ onDigit, onClear, onSubmit, accent, disabled, allowNega
           type="button"
           disabled={disabled}
           onClick={() => onDigit(k)}
-          className="rounded-xl bg-card py-3 text-2xl font-bold text-foreground shadow-[0_3px_0_var(--color-border)] transition-transform duration-100 hover:bg-secondary active:translate-y-0.5 active:shadow-none disabled:opacity-50 sm:py-4 sm:text-3xl"
+          className={`${keyBase} bg-card text-foreground hover:bg-secondary`}
         >
           {k}
         </button>
@@ -41,16 +57,16 @@ export function Keypad({ onDigit, onClear, onSubmit, accent, disabled, allowNega
         type="button"
         disabled={disabled}
         onClick={onClear}
-        aria-label="Clear"
-        className="flex items-center justify-center rounded-xl bg-team-red/15 py-3 text-2xl font-bold text-team-red shadow-[0_3px_0_oklch(0.6_0.23_25/25%)] transition-transform duration-100 hover:bg-team-red/25 active:translate-y-0.5 active:shadow-none disabled:opacity-50 sm:py-4"
+        aria-label={km.backspace}
+        className={`${keyBase} bg-team-red/15 text-team-red shadow-[0_3px_0_oklch(0.6_0.23_25/25%)] hover:bg-team-red/25`}
       >
-        <Delete className="size-7" strokeWidth={2.75} />
+        <Delete className="size-[clamp(1.1rem,3vh,1.75rem)]" strokeWidth={2.75} />
       </button>
       <button
         type="button"
         disabled={disabled}
         onClick={() => onDigit("0")}
-        className="rounded-xl bg-card py-3 text-2xl font-bold text-foreground shadow-[0_3px_0_var(--color-border)] transition-transform duration-100 hover:bg-secondary active:translate-y-0.5 active:shadow-none disabled:opacity-50 sm:py-4 sm:text-3xl"
+        className={`${keyBase} bg-card text-foreground hover:bg-secondary`}
       >
         0
       </button>
@@ -58,14 +74,14 @@ export function Keypad({ onDigit, onClear, onSubmit, accent, disabled, allowNega
         type="button"
         disabled={disabled}
         onClick={onSubmit}
-        aria-label="Submit answer"
-        className={`flex items-center justify-center rounded-xl py-3 font-bold text-primary-foreground transition-transform duration-100 active:translate-y-0.5 active:shadow-none disabled:opacity-50 sm:py-4 ${
+        aria-label={km.submitAnswer}
+        className={`${keyBase} text-primary-foreground ${
           accent === "blue"
             ? "bg-team-blue shadow-[0_3px_0_var(--color-team-blue-deep)]"
             : "bg-team-red shadow-[0_3px_0_var(--color-team-red-deep)]"
         }`}
       >
-        <Check className="size-8" strokeWidth={3.5} />
+        <Check className="size-[clamp(1.25rem,3.5vh,2rem)]" strokeWidth={3.5} />
       </button>
     </div>
   );

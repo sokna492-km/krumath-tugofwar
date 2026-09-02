@@ -1,4 +1,5 @@
 import type { Question } from "@/lib/math";
+import { km } from "@/lib/copy-km";
 import { Keypad } from "./Keypad";
 
 type PlayerPanelProps = {
@@ -33,7 +34,7 @@ export function PlayerPanel({
   const isBlue = accent === "blue";
   return (
     <section
-      aria-label={`${name} panel`}
+      aria-label={isBlue ? km.bluePanel : km.redPanel}
       className={`w-full max-w-lg overflow-hidden rounded-3xl bg-card shadow-xl ring-1 ring-border ${
         shaking ? "animate-shake" : ""
       }`}

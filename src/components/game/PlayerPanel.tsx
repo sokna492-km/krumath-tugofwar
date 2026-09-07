@@ -106,9 +106,7 @@ export function PlayerPanel({
         <ClaimQr url={claimUrl} claimed={claimed} accent={accent} />
       </header>
 
-      <div
-        className={`${isBlue ? "bg-team-blue/90" : "bg-team-red/90"} px-4 py-6 text-center`}
-      >
+      <div className={`${isBlue ? "bg-team-blue/90" : "bg-team-red/90"} px-4 py-6 text-center`}>
         <FitQuestion prompt={question.prompt} />
       </div>
 

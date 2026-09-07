@@ -63,11 +63,7 @@ export type ErrorMessage = {
 };
 
 export type ServerMessage =
-  | HostHello
-  | SnapshotMessage
-  | ClaimedMessage
-  | ErrorMessage
-  | { type: "pong" };
+  HostHello | SnapshotMessage | ClaimedMessage | ErrorMessage | { type: "pong" };
 
 export type ControllerInputType = "digit" | "backspace" | "toggleSign" | "submit";
 

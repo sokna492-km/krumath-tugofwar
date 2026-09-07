@@ -1,11 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
-import {
-  getCookies,
-  getRequestHost,
-  setCookie,
-  deleteCookie,
-} from "@tanstack/react-start/server";
-import { cookieOptionsForHost } from "@/lib/krumathCookies";
+import { getCookies, getRequestHost, setCookie, deleteCookie } from "@tanstack/react-start/server";
+import { cookieOptionsForHost } from "@/lib/auth-cookies";
 
 export function createSupabaseServerClient() {
   const url = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;

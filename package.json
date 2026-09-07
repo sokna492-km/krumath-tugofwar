@@ -1,6 +1,7 @@
 {
   "name": "krumath-tugofwar",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "scripts": {
@@ -36,7 +37,6 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260906.1",
     "@eslint/js": "^9.32.0",
-    "@lovable.dev/vite-tanstack-config": "^2.15.0",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",

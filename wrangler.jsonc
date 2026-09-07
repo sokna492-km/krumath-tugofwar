@@ -8,14 +8,14 @@
     "bindings": [
       {
         "name": "TUG_ROOMS",
-        "class_name": "TugRoom"
-      }
-    ]
+        "class_name": "TugRoom",
+      },
+    ],
   },
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["TugRoom"]
-    }
-  ]
+      "new_sqlite_classes": ["TugRoom"],
+    },
+  ],
 }

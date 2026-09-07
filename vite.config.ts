@@ -1,13 +1,11 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import type { Plugin } from "vite";
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
-
-const APP_BASE = "/tugofwar/";
+import { defineConfig, loadEnv } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsConfigPaths from "vite-tsconfig-paths";
+import { nitro } from "nitro/vite";
+import { APP_BASE } from "./src/lib/app-config";
 
 /**
  * `cloudflare:workers` only exists in the Workers runtime.
@@ -41,23 +39,56 @@ function stubCloudflareWorkersDev(): Plugin {
   };
 }
 
-export default defineConfig({
-  vite: {
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "VITE_");
+  const envDefine: Record<string, string> = {};
+  for (const [key, value] of Object.entries(env)) {
+    envDefine[`import.meta.env.${key}`] = JSON.stringify(value);
+  }
+
+  return {
     base: APP_BASE,
-    plugins: [stubCloudflareWorkersDev()],
+    define: envDefine,
+    resolve: {
+      alias: { "@": `${process.cwd()}/src` },
+      dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    },
+    optimizeDeps: {
+      include: [
+        "react",
+        "react-dom",
+        "react-dom/client",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+      ],
+    },
     build: {
       rolldownOptions: {
         external: ["cloudflare:workers"],
       },
     },
-  },
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
-  },
-  nitro: {
-    // cloudflare-module via lovable defaults; pin base for krumath.com/tugofwar
-    preset: "cloudflare-module",
-  },
+    plugins: [
+      stubCloudflareWorkersDev(),
+      tsConfigPaths({ projects: ["./tsconfig.json"] }),
+      tailwindcss(),
+      tanstackStart({
+        server: { entry: "server" },
+        importProtection: {
+          behavior: "error",
+          client: {
+            files: ["**/server/**"],
+            specifiers: ["server-only"],
+          },
+        },
+      }),
+      nitro({
+        preset: "cloudflare-module",
+        cloudflare: {
+          nodeCompat: true,
+          deployConfig: true,
+        },
+      }),
+      viteReact(),
+    ],
+  };
 });

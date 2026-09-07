@@ -1,21 +1,23 @@
 # Routes
 
 TanStack Start uses **file-based routing**. Every `.tsx` file in this directory
-defines a route. Do **not** create `src/pages/`, `src/routes/_app/index.tsx`, or
-`app/layout.tsx` — those are Next.js / Remix conventions. The only root layout
-is `src/routes/__root.tsx`.
+defines a route. The only root layout is `src/routes/__root.tsx`.
+`routeTree.gen.ts` is auto-generated — do not edit it by hand.
 
-## Conventions
+## App routes (base `/tugofwar/`)
 
-| File | URL |
-| --- | --- |
-| `index.tsx` | `/` |
-| `about.tsx` | `/about` |
-| `users/index.tsx` | `/users` |
-| `users/$id.tsx` | `/users/:id` (dynamic — bare `$`, no curly braces) |
-| `posts/{-$category}.tsx` | `/posts/:category?` (optional segment) |
-| `files/$.tsx` | `/files/*` (splat — read via `_splat` param, never `*`) |
-| `_layout.tsx` | layout route (renders children via `<Outlet />`) |
-| `__root.tsx` | app shell — wraps every page; preserve `<Outlet />` |
+| File                        | URL                                                           |
+| --------------------------- | ------------------------------------------------------------- |
+| `index.tsx`                 | `/` — host game (hard auth gate in production)                |
+| `c.$roomId.$claimToken.tsx` | `/c/:roomId/:claimToken` — phone controller                   |
+| `api/room.create.ts`        | `POST /api/room/create` — mint room id                        |
+| `api/room.$roomId.ts`       | `GET /api/room/:roomId` — WebSocket upgrade to Durable Object |
+| `__root.tsx`                | App shell (HTML, meta, 404 / error UI)                        |
 
-`routeTree.gen.ts` is auto-generated. Don't edit it by hand.
+## Conventions (TanStack)
+
+| Pattern      | Meaning                            |
+| ------------ | ---------------------------------- |
+| `$param.tsx` | Dynamic segment                    |
+| `api/*.ts`   | API / server handlers              |
+| `__root.tsx` | Root shell — preserve `<Outlet />` |

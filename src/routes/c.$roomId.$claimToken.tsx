@@ -21,9 +21,7 @@ export const Route = createFileRoute("/c/$roomId/$claimToken")({
   component: ControllerPage,
 });
 
-function statusMessage(
-  status: ReturnType<typeof useControllerRoom>["status"],
-): string {
+function statusMessage(status: ReturnType<typeof useControllerRoom>["status"]): string {
   switch (status) {
     case "connecting":
     case "connected":
@@ -79,9 +77,7 @@ function ControllerPlaySurface({
           {name} ★ {sideState.score}
         </h1>
       </header>
-      <div
-        className={`${isBlue ? "bg-team-blue/90" : "bg-team-red/90"} px-4 py-8 text-center`}
-      >
+      <div className={`${isBlue ? "bg-team-blue/90" : "bg-team-red/90"} px-4 py-8 text-center`}>
         <p className="text-4xl font-extrabold tracking-wide text-primary-foreground">
           {sideState.question.prompt}
         </p>
@@ -91,9 +87,7 @@ function ControllerPlaySurface({
           aria-live="polite"
           className="block h-14 rounded-xl border-2 border-input bg-background px-4 text-right text-3xl font-bold leading-[3.25rem] text-foreground"
         >
-          {sideState.input || (
-            <span className="text-muted-foreground/40">?</span>
-          )}
+          {sideState.input || <span className="text-muted-foreground/40">?</span>}
         </output>
         <div className="h-[min(52dvh,22rem)]">
           <Keypad
@@ -115,9 +109,7 @@ function DevClaimedPreview({ side }: { side: Side }) {
   const gameState = createInitialState("4-5");
   return (
     <div className="space-y-3">
-      <p className="text-center text-xs font-semibold text-amber-700">
-        {km.qrDevPreviewHint}
-      </p>
+      <p className="text-center text-xs font-semibold text-amber-700">{km.qrDevPreviewHint}</p>
       <ControllerPlaySurface
         side={side}
         gameState={gameState}
@@ -133,14 +125,10 @@ function DevClaimedPreview({ side }: { side: Side }) {
 function ControllerPage() {
   const { roomId, claimToken } = Route.useParams();
   const { preview } = Route.useSearch();
-  const { status, side, gameState, sendInput } = useControllerRoom(
-    claimToken,
-    roomId,
-  );
+  const { status, side, gameState, sendInput } = useControllerRoom(claimToken, roomId);
 
   const previewClaimed = import.meta.env.DEV && preview === "claimed";
-  const previewSide: Side =
-    claimToken.includes("red") || roomId.includes("red") ? "red" : "blue";
+  const previewSide: Side = claimToken.includes("red") || roomId.includes("red") ? "red" : "blue";
 
   const ready = status === "claimed" && side && gameState;
   const liveSide = side ?? "blue";
@@ -153,9 +141,7 @@ function ControllerPage() {
           <DevClaimedPreview side={previewSide} />
         ) : !ready || !gameState ? (
           <div className="rounded-3xl bg-card p-8 text-center shadow-xl ring-1 ring-border">
-            <p className="text-lg font-extrabold text-foreground">
-              {statusMessage(status)}
-            </p>
+            <p className="text-lg font-extrabold text-foreground">{statusMessage(status)}</p>
             {import.meta.env.DEV && (
               <p className="mt-4 text-xs font-semibold text-amber-700">
                 {km.controllerDevPreviewHint}

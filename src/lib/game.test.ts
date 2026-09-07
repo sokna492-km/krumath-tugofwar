@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { WIN_PULLS } from "@/lib/constants";
-import {
-  createInitialState,
-  gameReducer,
-  type GameState,
-  type SideState,
-} from "@/lib/game";
+import { createInitialState, gameReducer, type GameState, type SideState } from "@/lib/game";
 import type { Question } from "@/lib/math";
 
 const q = (answer: number): Question => ({
@@ -131,22 +126,13 @@ describe("gameReducer smoke", () => {
   });
 
   it("backspace deletes one character", () => {
-    let state = withSides(
-      createInitialState(),
-      { input: "12" },
-      { input: "" },
-    );
+    let state = withSides(createInitialState(), { input: "12" }, { input: "" });
     state = gameReducer(state, { type: "backspace", side: "blue" });
     expect(state.blue.input).toBe("1");
   });
 
   it("rejects grade change while rope is away from center", () => {
-    let state = withSides(
-      createInitialState(),
-      {},
-      {},
-      { position: 2, band: "4-5" },
-    );
+    let state = withSides(createInitialState(), {}, {}, { position: 2, band: "4-5" });
     state = gameReducer(state, { type: "grade", band: "6-7" });
     expect(state.band).toBe("4-5");
     expect(state.position).toBe(2);
@@ -160,11 +146,7 @@ describe("gameReducer smoke", () => {
   });
 
   it("wrong answer shakes and blocks digits until clearShake", () => {
-    let state = withSides(
-      createInitialState(),
-      { answer: 4, input: "9" },
-      {},
-    );
+    let state = withSides(createInitialState(), { answer: 4, input: "9" }, {});
     state = gameReducer(state, { type: "submit", side: "blue" });
     expect(state.blue.shaking).toBe(true);
     expect(state.blue.input).toBe("");

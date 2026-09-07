@@ -23,6 +23,7 @@ const entry = `/**
 import nitroApp from "./index.mjs";
 export { TugRoom } from "./_ssr/ssr.mjs";
 
+// Keep in sync with src/lib/app-config.ts (APP_SLUG).
 const BASE = "/tugofwar";
 
 function assetPathFromRequest(pathname) {

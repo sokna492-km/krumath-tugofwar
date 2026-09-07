@@ -12,19 +12,20 @@ import {
 import { SHAKE_MS } from "@/lib/constants";
 import { km } from "@/lib/copy-km";
 import { fetchPlayableUser } from "@/lib/auth";
-import { signInHref } from "@/lib/krumathUrls";
+import { signInHref } from "@/lib/host-urls";
 import { useHostRoom } from "@/lib/use-game-room";
+import { AccountMenu } from "@/components/game/AccountMenu";
 import { PlayerPanel } from "@/components/game/PlayerPanel";
 import { Rope } from "@/components/game/Rope";
 import { SchoolBackground } from "@/components/game/SchoolBackground";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
-    if (import.meta.env.DEV) return;
     const user = await fetchPlayableUser();
-    if (!user) {
+    if (!import.meta.env.DEV && !user) {
       throw redirect({ href: signInHref() });
     }
+    return { user };
   },
   head: () => ({
     meta: [
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/")({
 const CONFETTI = Array.from({ length: 24 }, (_, i) => i);
 
 function Index() {
+  const { user } = Route.useRouteContext();
   const [localState, localDispatch] = useReducer(gameReducer, undefined, () =>
     createInitialState("4-5"),
   );
@@ -60,21 +62,13 @@ function Index() {
   const roomConnected = hostRoom.connected && hostRoom.remoteState !== null;
   const state = roomConnected ? hostRoom.remoteState! : localState;
 
-  const {
-    band,
-    blue,
-    red,
-    position,
-    pullKey,
-    lastPuller,
-    winner,
-  } = state;
+  const { band, blue, red, position, pullKey, lastPuller, winner } = state;
 
   const gradeEditable = canChangeGrade(state);
 
   useEffect(() => {
+    const timers = shakeTimers.current;
     return () => {
-      const timers = shakeTimers.current;
       if (timers.blue !== undefined) window.clearTimeout(timers.blue);
       if (timers.red !== undefined) window.clearTimeout(timers.red);
     };
@@ -98,8 +92,7 @@ function Index() {
     if (roomConnected) return;
 
     const value = parseInt(before.input, 10);
-    const wrong =
-      !Number.isNaN(value) && value !== before.question.answer;
+    const wrong = !Number.isNaN(value) && value !== before.question.answer;
     if (wrong) {
       const existing = shakeTimers.current[side];
       if (existing) window.clearTimeout(existing);
@@ -116,10 +109,7 @@ function Index() {
 
   const blueLocked = hostRoom.claims.blue.claimed;
   const redLocked = hostRoom.claims.red.claimed;
-  const faviconSrc = `${import.meta.env.BASE_URL}favicon.svg`.replace(
-    /\/{2,}/g,
-    "/",
-  );
+  const faviconSrc = `${import.meta.env.BASE_URL}favicon.svg`.replace(/\/{2,}/g, "/");
 
   return (
     <main className="relative flex min-h-screen flex-col items-center gap-4 overflow-hidden bg-background px-3 py-4 sm:gap-6 sm:px-6 sm:py-8">
@@ -136,14 +126,17 @@ function Index() {
             />
             <span>{km.metaTitle}</span>
           </h1>
-          <button
-            type="button"
-            onClick={() => dispatchAction({ type: "resetAll" })}
-            className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground transition-transform hover:scale-105"
-          >
-            <RotateCcw className="size-4" />
-            {km.newMatch}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => dispatchAction({ type: "resetAll" })}
+              className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground transition-transform hover:scale-105"
+            >
+              <RotateCcw className="size-4" />
+              {km.newMatch}
+            </button>
+            <AccountMenu user={user} />
+          </div>
         </header>
 
         <div
@@ -152,9 +145,7 @@ function Index() {
           className="flex flex-wrap items-center justify-center gap-1.5 rounded-full bg-card px-3 py-2 shadow-md ring-1 ring-border"
         >
           <GraduationCap className="mr-1 size-5 text-muted-foreground" />
-          <span className="mr-1 text-sm font-bold text-muted-foreground">
-            {km.grade}
-          </span>
+          <span className="mr-1 text-sm font-bold text-muted-foreground">{km.grade}</span>
           {GRADE_BANDS.map((g) => (
             <button
               key={g.id}
@@ -187,23 +178,15 @@ function Index() {
               allowNegative={bandAllowsNegative(band)}
               claimUrl={hostRoom.claimUrls?.blue ?? null}
               claimed={blueLocked}
-              onDigit={(d) =>
-                dispatchAction({ type: "digit", side: "blue", digit: d })
-              }
+              onDigit={(d) => dispatchAction({ type: "digit", side: "blue", digit: d })}
               onClear={() => dispatchAction({ type: "backspace", side: "blue" })}
               onSubmit={() => handleSubmit("blue")}
-              onToggleSign={() =>
-                dispatchAction({ type: "toggleSign", side: "blue" })
-              }
+              onToggleSign={() => dispatchAction({ type: "toggleSign", side: "blue" })}
             />
           </div>
 
           <div className="relative z-0 flex w-full min-w-0 max-w-md flex-col items-center lg:w-96 xl:w-[30rem]">
-            <Rope
-              position={position}
-              pullKey={pullKey}
-              lastPuller={lastPuller}
-            />
+            <Rope position={position} pullKey={pullKey} lastPuller={lastPuller} />
           </div>
 
           <div className="relative z-20 w-80 sm:w-[22rem] justify-self-center lg:justify-self-end">
@@ -218,14 +201,10 @@ function Index() {
               allowNegative={bandAllowsNegative(band)}
               claimUrl={hostRoom.claimUrls?.red ?? null}
               claimed={redLocked}
-              onDigit={(d) =>
-                dispatchAction({ type: "digit", side: "red", digit: d })
-              }
+              onDigit={(d) => dispatchAction({ type: "digit", side: "red", digit: d })}
               onClear={() => dispatchAction({ type: "backspace", side: "red" })}
               onSubmit={() => handleSubmit("red")}
-              onToggleSign={() =>
-                dispatchAction({ type: "toggleSign", side: "red" })
-              }
+              onToggleSign={() => dispatchAction({ type: "toggleSign", side: "red" })}
             />
           </div>
         </div>

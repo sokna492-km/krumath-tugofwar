@@ -19,8 +19,7 @@ const MINUS = "−";
 const TIMES = "×";
 const DIV = "÷";
 
-const rand = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
+const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 /** Format a number for prompts; use Unicode minus for negatives. */
 const fmt = (n: number): string => (n < 0 ? `${MINUS}${Math.abs(n)}` : `${n}`);
@@ -170,11 +169,7 @@ function solveOneStep(max: number): Question {
     return { prompt: `${k}${v} = ${fmt(rhs)}`, answer: solution };
   }
   const k = rand(2, 12);
-  // v ÷ k = q  ⇒  v = k * q; solution is the quotient shown as answer? Plan says x ÷ k = b with integer solution.
-  // Prompt: x ÷ k = b where answer is x (the unknown). So solution is x, b = x/k.
-  const q = solution;
-  // Ensure x is divisible: set x = k * q, answer is x? Or answer is the variable value.
-  // "x ÷ k = b" solve for x ⇒ x = k*b. So answer is k*b.
+  // "x ÷ k = b" solve for x ⇒ x = k*b.
   const b = signedMag(Math.min(max, 20), false);
   const x = k * b;
   return {
@@ -194,8 +189,7 @@ function evaluateTwoStep(max: number): Question {
     const a = signedMag(Math.min(max, 20));
     const b = signedMag(Math.min(max, 20));
     const answer = k * (value - a) + b;
-    const tail =
-      b < 0 ? `${MINUS} ${Math.abs(b)}` : b > 0 ? `+ ${b}` : "";
+    const tail = b < 0 ? `${MINUS} ${Math.abs(b)}` : b > 0 ? `+ ${b}` : "";
     const prompt = tail
       ? `${v} = ${fmt(value)}, ${k}(${v} ${MINUS} ${fmtOp(a, true)}) ${tail}`
       : `${v} = ${fmt(value)}, ${k}(${v} ${MINUS} ${fmtOp(a, true)})`;
@@ -206,8 +200,7 @@ function evaluateTwoStep(max: number): Question {
     const k = rand(2, 6);
     const a = signedMag(Math.min(max, 20));
     const answer = k * value - (value + a);
-    const inner =
-      a < 0 ? `${v} ${MINUS} ${Math.abs(a)}` : `${v} + ${a}`;
+    const inner = a < 0 ? `${v} ${MINUS} ${Math.abs(a)}` : `${v} + ${a}`;
     return {
       prompt: `${v} = ${fmt(value)}, ${k}${v} ${MINUS} (${inner})`,
       answer,
@@ -245,11 +238,11 @@ function solveTwoStep(max: number): Question {
     // Normalize " + −3" style: if a is negative, use minus in prompt
     const leftClean =
       a < 0
-        ? (coeff === 1
-            ? `${v} ${MINUS} ${Math.abs(a)}`
-            : coeff === -1
-              ? `${MINUS}${v} ${MINUS} ${Math.abs(a)}`
-              : `${fmt(coeff)}${v} ${MINUS} ${Math.abs(a)}`)
+        ? coeff === 1
+          ? `${v} ${MINUS} ${Math.abs(a)}`
+          : coeff === -1
+            ? `${MINUS}${v} ${MINUS} ${Math.abs(a)}`
+            : `${fmt(coeff)}${v} ${MINUS} ${Math.abs(a)}`
         : left;
     return { prompt: `${leftClean} = ${fmt(rhs)}`, answer: solution };
   }
@@ -267,10 +260,7 @@ function solveTwoStep(max: number): Question {
   const k = rand(2, 6);
   const a = signedMag(Math.min(max, 30));
   const rhs = -k * solution + a;
-  const mid =
-    a < 0
-      ? `${MINUS}${k}${v} ${MINUS} ${Math.abs(a)}`
-      : `${MINUS}${k}${v} + ${fmt(a)}`;
+  const mid = a < 0 ? `${MINUS}${k}${v} ${MINUS} ${Math.abs(a)}` : `${MINUS}${k}${v} + ${fmt(a)}`;
   return { prompt: `${mid} = ${fmt(rhs)}`, answer: solution };
 }
 

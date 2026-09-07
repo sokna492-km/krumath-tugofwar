@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase.server";
 
 export type PlayableUser = { id: string };
 
-/** Signed-in, non-anonymous user — same rule as KruMath RequireLoggedIn. */
+/** Signed-in, non-anonymous Supabase user (optional hard gate). */
 export const fetchPlayableUser = createServerFn({ method: "GET" }).handler(
   async (): Promise<PlayableUser | null> => {
     const url = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;

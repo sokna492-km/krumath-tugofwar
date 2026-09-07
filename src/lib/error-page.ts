@@ -1,3 +1,4 @@
+import { APP_RETURN_PATH } from "./app-config";
 import { km } from "./copy-km";
 
 export function renderErrorPage(): string {
@@ -24,7 +25,7 @@ export function renderErrorPage(): string {
       <p>${km.pageLoadFailedBody}</p>
       <div class="actions">
         <button class="primary" onclick="location.reload()">${km.tryAgain}</button>
-        <a class="secondary" href="/">${km.goHome}</a>
+        <a class="secondary" href="${APP_RETURN_PATH}">${km.goHome}</a>
       </div>
     </div>
   </body>

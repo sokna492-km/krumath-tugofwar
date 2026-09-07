@@ -20,10 +20,20 @@ dist-ssr
 .env
 .env.*
 !.env.example
+.env.local
+.env.production
+
+# Keys / credentials
+*.pem
+*.key
+credentials.json
 
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+
+# Lovable editor metadata (not needed for builds)
+.lovable/
 
 # Editor directories and files
 .vscode/*

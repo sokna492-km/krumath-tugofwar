@@ -1,7 +1,4 @@
-import {
-  CONTROLLER_RATE_LIMIT,
-  CONTROLLER_RATE_WINDOW_MS,
-} from "@/lib/constants";
+import { CONTROLLER_RATE_LIMIT, CONTROLLER_RATE_WINDOW_MS } from "@/lib/constants";
 import {
   createInitialState,
   gameReducer,
@@ -10,11 +7,7 @@ import {
   type Side,
 } from "@/lib/game";
 import type { GradeBand } from "@/lib/math";
-import type {
-  ClientMessage,
-  PublicClaims,
-  PublicRoomSnapshot,
-} from "@/lib/room-protocol";
+import type { ClientMessage, PublicClaims, PublicRoomSnapshot } from "@/lib/room-protocol";
 
 export type RoomSecrets = {
   blueClaimToken: string;
@@ -128,20 +121,11 @@ export type ReconnectResult =
   | { ok: false; error: "invalidSession"; room: RoomModel };
 
 /** Reconnect with sessionSecret only — claimToken cannot take over a claimed side. */
-export function reconnectWithSession(
-  room: RoomModel,
-  sessionSecret: string,
-): ReconnectResult {
-  if (
-    room.secrets.blueSessionSecret !== null &&
-    sessionSecret === room.secrets.blueSessionSecret
-  ) {
+export function reconnectWithSession(room: RoomModel, sessionSecret: string): ReconnectResult {
+  if (room.secrets.blueSessionSecret !== null && sessionSecret === room.secrets.blueSessionSecret) {
     return { ok: true, side: "blue", room };
   }
-  if (
-    room.secrets.redSessionSecret !== null &&
-    sessionSecret === room.secrets.redSessionSecret
-  ) {
+  if (room.secrets.redSessionSecret !== null && sessionSecret === room.secrets.redSessionSecret) {
     return { ok: true, side: "red", room };
   }
   return { ok: false, error: "invalidSession", room };
@@ -180,11 +164,7 @@ export function claimOrReconnect(
 
 const HOST_ONLY = new Set(["grade", "playAgain", "resetAll"]);
 
-export type ApplyActionError =
-  | "unauthorized"
-  | "rateLimited"
-  | "rejected"
-  | "malformed";
+export type ApplyActionError = "unauthorized" | "rateLimited" | "rejected" | "malformed";
 
 export type ApplyActionResult =
   | {

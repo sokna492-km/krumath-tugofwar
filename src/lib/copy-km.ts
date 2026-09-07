@@ -1,6 +1,8 @@
 /** Khmer UI copy for Math Tug of War. Digits and math symbols stay Western. */
 export const km = {
   newMatch: "ប្រកួតសាថ្មី",
+  signIn: "ចូល",
+  homePage: "ទំព័រដើម",
   playAgain: "លេងម្តងទៀត",
   grade: "ថ្នាក់ទី",
   gradeLevel: "កម្រិតថ្នាក់",
@@ -24,12 +26,10 @@ export const km = {
   pageNotFoundBody: "ទំព័រដែលអ្នកកំពុងស្វែងរកមិនមាន ឬត្រូវបានផ្លាស់ប្ដូរ។",
   goHome: "ត្រលប់ទៅទំព័រដើម",
   pageLoadFailed: "ទំព័រនេះបរាជ័យក្នុងការផ្ទុកឡើងវិញ។",
-  pageLoadFailedBody:
-    "មានបញ្ហា! សូមព្យាយាមផ្ទុកឡើងវិញ ឬត្រលប់ទៅទំព័រដើម។",
+  pageLoadFailedBody: "មានបញ្ហា! សូមព្យាយាមផ្ទុកឡើងវិញ ឬត្រលប់ទៅទំព័រដើម។",
   tryAgain: "ព្យាយាមម្តងទៀត",
   qrDevPreviewHint: "DEV — QR សម្រាប់មើល UI ប៉ុណ្ណោះ (ទូរស័ព្ទមិនអាចចូលបាន)",
-  controllerDevPreviewHint:
-    "DEV — បន្ថែម ?preview=claimed នៅចុង URL ដើម្បីមើល UI ក្រោយភ្ជាប់",
+  controllerDevPreviewHint: "DEV — បន្ថែម ?preview=claimed នៅចុង URL ដើម្បីមើល UI ក្រោយភ្ជាប់",
   close: "ត្រលប់",
   qrScanToJoin: "ស្កេនដើម្បីចូលលេង",
   qrClaimed: "បានភ្ជាប់ទូរសព្ទជោគជ័យ!",
@@ -37,7 +37,7 @@ export const km = {
   controllerConnecting: "កំពុងភ្ជាប់…",
   controllerReconnecting: "កំពុងភ្ជាប់ឡើងវិញ…",
   controllerClaimed: "រួចរាល់ — វាយចម្លើយ",
-  controllerAlreadyUsed: "QR នេះត្រូវបានប្រើរួចហើយ។ សូមប្រើទូរស័ព្ទដែលបានភ្ជាប់។",
+  controllerAlreadyUsed: "QR នេះត្រូវបានប្រើប្រាស់រួចហើយ។ សូមប្រើទូរស័ព្ទដែលបានភ្ជាប់រួចរាល់។",
   controllerInvalid: "QR មិនត្រឹមត្រូវ។",
-  controllerRoomExpired: "បន្ទប់បានផុតកំណត់។ សូមស្កេន QR ថ្មីពីអេក្រង់គ្រូ។",
+  controllerRoomExpired: "បន្ទប់បានផុតកំណត់។ សូមស្កេន QR ថ្មីពីអេក្រង់គ្រូរបស់អ្នក។",
 } as const;

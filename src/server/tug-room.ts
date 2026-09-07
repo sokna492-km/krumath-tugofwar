@@ -10,10 +10,7 @@ import {
   type RoomSecrets,
 } from "@/lib/room-logic";
 import type { GameState, Side } from "@/lib/game";
-import {
-  parseClientMessage,
-  type ServerMessage,
-} from "@/lib/room-protocol";
+import { parseClientMessage, type ServerMessage } from "@/lib/room-protocol";
 
 type ConnAttachment = {
   connectionId: string;
@@ -138,8 +135,7 @@ export class TugRoom extends DurableObject<TugEnv> {
   }
 
   override async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer) {
-    const text =
-      typeof message === "string" ? message : new TextDecoder().decode(message);
+    const text = typeof message === "string" ? message : new TextDecoder().decode(message);
     const parsed = parseClientMessage(text);
     if (!parsed) {
       this.send(ws, { type: "error", code: "malformed" });
@@ -184,11 +180,7 @@ export class TugRoom extends DurableObject<TugEnv> {
         return;
       }
 
-      const result = claimOrReconnect(
-        this.room,
-        parsed.claimToken,
-        parsed.sessionSecret,
-      );
+      const result = claimOrReconnect(this.room, parsed.claimToken, parsed.sessionSecret);
       if (!result.ok) {
         this.send(ws, {
           type: "error",

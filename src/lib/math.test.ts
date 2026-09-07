@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  GRADE_BANDS,
-  bandAllowsNegative,
-  makeQuestion,
-  type GradeBand,
-} from "@/lib/math";
+import { GRADE_BANDS, bandAllowsNegative, makeQuestion, type GradeBand } from "@/lib/math";
 
 const SAMPLE = 80;
 
@@ -31,7 +26,7 @@ describe("makeQuestion 4-5", () => {
       expect(q.answer).toBeGreaterThanOrEqual(0);
       expect(q.prompt.length).toBeGreaterThan(0);
       expect(q.prompt).not.toMatch(/[xy]/);
-      expect(q.prompt).not.toMatch(/^\−/);
+      expect(q.prompt).not.toMatch(/^−/);
       expect(q.prompt).not.toContain("(−");
     }
   });
@@ -51,9 +46,7 @@ describe("makeQuestion 6-7", () => {
       expect(Number.isInteger(q.answer)).toBe(true);
       expect(q.prompt).not.toMatch(/[xy]/);
     }
-    const hasNegPrompt = qs.some(
-      (q) => q.prompt.startsWith("−") || q.prompt.includes("(−"),
-    );
+    const hasNegPrompt = qs.some((q) => q.prompt.startsWith("−") || q.prompt.includes("(−"));
     const hasNegAnswer = qs.some((q) => q.answer < 0);
     expect(hasNegPrompt || hasNegAnswer).toBe(true);
   });
@@ -109,11 +102,6 @@ describe("makeQuestion 10-12", () => {
 
 describe("GRADE_BANDS", () => {
   it("lists all four bands", () => {
-    expect(GRADE_BANDS.map((g) => g.id)).toEqual([
-      "4-5",
-      "6-7",
-      "8-9",
-      "10-12",
-    ]);
+    expect(GRADE_BANDS.map((g) => g.id)).toEqual(["4-5", "6-7", "8-9", "10-12"]);
   });
 });

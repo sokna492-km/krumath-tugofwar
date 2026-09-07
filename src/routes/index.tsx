@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useReducer, useRef } from "react";
 import { GraduationCap, RotateCcw, Trophy } from "lucide-react";
 import { GRADE_BANDS, bandAllowsNegative, type GradeBand } from "@/lib/math";
@@ -6,14 +6,26 @@ import {
   canChangeGrade,
   createInitialState,
   gameReducer,
+  type GameAction,
   type Side,
 } from "@/lib/game";
+import { SHAKE_MS } from "@/lib/constants";
 import { km } from "@/lib/copy-km";
+import { fetchPlayableUser } from "@/lib/auth";
+import { signInHref } from "@/lib/krumathUrls";
+import { useHostRoom } from "@/lib/use-game-room";
 import { PlayerPanel } from "@/components/game/PlayerPanel";
 import { Rope } from "@/components/game/Rope";
 import { SchoolBackground } from "@/components/game/SchoolBackground";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    if (import.meta.env.DEV) return;
+    const user = await fetchPlayableUser();
+    if (!user) {
+      throw redirect({ href: signInHref() });
+    }
+  },
   head: () => ({
     meta: [
       { title: km.metaTitleFull },
@@ -38,13 +50,15 @@ export const Route = createFileRoute("/")({
 
 const CONFETTI = Array.from({ length: 24 }, (_, i) => i);
 
-const SHAKE_MS = 350;
-
 function Index() {
-  const [state, dispatch] = useReducer(gameReducer, undefined, () =>
+  const [localState, localDispatch] = useReducer(gameReducer, undefined, () =>
     createInitialState("4-5"),
   );
   const shakeTimers = useRef<Partial<Record<Side, number>>>({});
+  const hostRoom = useHostRoom();
+
+  const roomConnected = hostRoom.connected && hostRoom.remoteState !== null;
+  const state = roomConnected ? hostRoom.remoteState! : localState;
 
   const {
     band,
@@ -66,15 +80,23 @@ function Index() {
     };
   }, []);
 
+  const dispatchAction = (action: GameAction) => {
+    if (roomConnected) {
+      hostRoom.sendAction(action);
+      return;
+    }
+    localDispatch(action);
+  };
+
   const handleSubmit = (side: Side) => {
     const before = side === "blue" ? blue : red;
     if (winner || before.shaking || before.input === "") return;
 
-    dispatch({ type: "submit", side });
+    dispatchAction({ type: "submit", side });
 
-    // Wrong answers set shaking in the reducer; schedule clear using next tick state.
-    // Read after dispatch via functional check: if input was non-empty and will shake,
-    // we detect wrong by comparing — easier: always arm clearShake only when wrong.
+    // Local fallback only — DO owns shake clear when room-connected.
+    if (roomConnected) return;
+
     const value = parseInt(before.input, 10);
     const wrong =
       !Number.isNaN(value) && value !== before.question.answer;
@@ -82,15 +104,22 @@ function Index() {
       const existing = shakeTimers.current[side];
       if (existing) window.clearTimeout(existing);
       shakeTimers.current[side] = window.setTimeout(() => {
-        dispatch({ type: "clearShake", side });
+        localDispatch({ type: "clearShake", side });
         delete shakeTimers.current[side];
       }, SHAKE_MS);
     }
   };
 
   const handleGradeChange = (next: GradeBand) => {
-    dispatch({ type: "grade", band: next });
+    dispatchAction({ type: "grade", band: next });
   };
+
+  const blueLocked = hostRoom.claims.blue.claimed;
+  const redLocked = hostRoom.claims.red.claimed;
+  const faviconSrc = `${import.meta.env.BASE_URL}favicon.svg`.replace(
+    /\/{2,}/g,
+    "/",
+  );
 
   return (
     <main className="relative flex min-h-screen flex-col items-center gap-4 overflow-hidden bg-background px-3 py-4 sm:gap-6 sm:px-6 sm:py-8">
@@ -99,7 +128,7 @@ function Index() {
         <header className="flex w-full max-w-7xl items-center justify-between">
           <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-foreground sm:gap-3 sm:text-2xl">
             <img
-              src="/favicon.svg"
+              src={faviconSrc}
               alt=""
               className="size-7 shrink-0 sm:size-8"
               width={32}
@@ -109,17 +138,13 @@ function Index() {
           </h1>
           <button
             type="button"
-            onClick={() => dispatch({ type: "resetAll" })}
+            onClick={() => dispatchAction({ type: "resetAll" })}
             className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground transition-transform hover:scale-105"
           >
             <RotateCcw className="size-4" />
             {km.newMatch}
           </button>
         </header>
-
-        <p className="max-w-xl text-center text-sm font-semibold text-muted-foreground sm:text-base">
-          {km.hint}
-        </p>
 
         <div
           role="group"
@@ -149,8 +174,8 @@ function Index() {
           ))}
         </div>
 
-        <div className="flex w-full max-w-7xl flex-col items-center gap-4 sm:gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
-          <div className="flex justify-center lg:justify-end">
+        <div className="flex w-full flex-col items-center gap-4 sm:gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-x-4">
+          <div className="relative z-20 w-80 sm:w-[22rem] justify-self-center lg:justify-self-start">
             <PlayerPanel
               name={km.blue}
               accent="blue"
@@ -158,24 +183,22 @@ function Index() {
               input={blue.input}
               score={blue.score}
               shaking={blue.shaking}
-              disabled={!!winner || blue.shaking}
+              disabled={!!winner || blue.shaking || blueLocked}
               allowNegative={bandAllowsNegative(band)}
+              claimUrl={hostRoom.claimUrls?.blue ?? null}
+              claimed={blueLocked}
               onDigit={(d) =>
-                dispatch({ type: "digit", side: "blue", digit: d })
+                dispatchAction({ type: "digit", side: "blue", digit: d })
               }
-              onClear={() => dispatch({ type: "backspace", side: "blue" })}
+              onClear={() => dispatchAction({ type: "backspace", side: "blue" })}
               onSubmit={() => handleSubmit("blue")}
               onToggleSign={() =>
-                dispatch({ type: "toggleSign", side: "blue" })
+                dispatchAction({ type: "toggleSign", side: "blue" })
               }
             />
           </div>
 
-          <div className="flex w-full min-w-0 max-w-md flex-col items-center gap-2 lg:w-96 xl:w-[30rem]">
-            <div className="flex w-full items-center justify-between px-1 text-xs font-extrabold tracking-wide sm:text-sm">
-              <span className="text-team-blue">{km.blueArrow}</span>
-              <span className="text-team-red">{km.redArrow}</span>
-            </div>
+          <div className="relative z-0 flex w-full min-w-0 max-w-md flex-col items-center lg:w-96 xl:w-[30rem]">
             <Rope
               position={position}
               pullKey={pullKey}
@@ -183,7 +206,7 @@ function Index() {
             />
           </div>
 
-          <div className="flex justify-center lg:justify-start">
+          <div className="relative z-20 w-80 sm:w-[22rem] justify-self-center lg:justify-self-end">
             <PlayerPanel
               name={km.red}
               accent="red"
@@ -191,15 +214,17 @@ function Index() {
               input={red.input}
               score={red.score}
               shaking={red.shaking}
-              disabled={!!winner || red.shaking}
+              disabled={!!winner || red.shaking || redLocked}
               allowNegative={bandAllowsNegative(band)}
+              claimUrl={hostRoom.claimUrls?.red ?? null}
+              claimed={redLocked}
               onDigit={(d) =>
-                dispatch({ type: "digit", side: "red", digit: d })
+                dispatchAction({ type: "digit", side: "red", digit: d })
               }
-              onClear={() => dispatch({ type: "backspace", side: "red" })}
+              onClear={() => dispatchAction({ type: "backspace", side: "red" })}
               onSubmit={() => handleSubmit("red")}
               onToggleSign={() =>
-                dispatch({ type: "toggleSign", side: "red" })
+                dispatchAction({ type: "toggleSign", side: "red" })
               }
             />
           </div>
@@ -241,7 +266,7 @@ function Index() {
               <div className="mt-6 flex flex-col gap-3">
                 <button
                   type="button"
-                  onClick={() => dispatch({ type: "playAgain" })}
+                  onClick={() => dispatchAction({ type: "playAgain" })}
                   className={`w-full rounded-2xl py-4 text-xl font-extrabold text-primary-foreground transition-transform hover:scale-105 active:translate-y-0.5 ${
                     winner === "blue"
                       ? "bg-team-blue shadow-[0_4px_0_var(--color-team-blue-deep)]"
@@ -252,7 +277,7 @@ function Index() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => dispatch({ type: "resetAll" })}
+                  onClick={() => dispatchAction({ type: "resetAll" })}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-secondary py-3 text-base font-bold text-secondary-foreground transition-transform hover:scale-105"
                 >
                   <RotateCcw className="size-4" />

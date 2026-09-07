@@ -9,9 +9,7 @@ import {
 import type { Question } from "@/lib/math";
 
 const q = (answer: number): Question => ({
-  a: answer,
-  b: 0,
-  symbol: "+",
+  prompt: `${answer} + 0`,
   answer,
 });
 

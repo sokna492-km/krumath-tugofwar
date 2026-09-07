@@ -15,7 +15,7 @@ function record(error: unknown) {
 const CAUSE_DEPTH_LIMIT = 5;
 const DESCRIPTION_LENGTH_LIMIT = 8_000;
 
-export function describeError(error: unknown): string {
+function describeError(error: unknown): string {
   const parts: string[] = [];
   let current: unknown = error;
   for (let depth = 0; depth < CAUSE_DEPTH_LIMIT && current != null; depth++) {
@@ -63,8 +63,10 @@ console.error = (...args: unknown[]) => {
 };
 
 if (typeof globalThis.addEventListener === "function") {
-  globalThis.addEventListener("error", (event) => record((event as ErrorEvent).error ?? event));
-  globalThis.addEventListener("unhandledrejection", (event) =>
+  globalThis.addEventListener("error", (event: Event) =>
+    record((event as ErrorEvent).error ?? event),
+  );
+  globalThis.addEventListener("unhandledrejection", (event: Event) =>
     record((event as PromiseRejectionEvent).reason),
   );
 }

@@ -1,6 +1,6 @@
 /** Khmer UI copy for Math Tug of War. Digits and math symbols stay Western. */
 export const km = {
-  newMatch: "ប្រកួតថ្មី",
+  newMatch: "ប្រកួតសាថ្មី",
   playAgain: "លេងម្តងទៀត",
   grade: "ថ្នាក់ទី",
   gradeLevel: "កម្រិតថ្នាក់",
@@ -9,8 +9,6 @@ export const km = {
   red: "ក្រហម",
   blueWins: "ខៀវឈ្នះ!",
   redWins: "ក្រហមឈ្នះ!",
-  blueArrow: "ខៀវ ←",
-  redArrow: "→ ក្រហម",
   bluePanel: "បន្ទះខៀវ",
   redPanel: "បន្ទះក្រហម",
   toggleSign: "ប្តូរសញ្ញាអវិជ្ជមាន",
@@ -18,7 +16,6 @@ export const km = {
   submitAnswer: "បញ្ចូលចម្លើយ",
   blueAlt: "អ្នកលេងខៀវកំពុងទាញព្រ័ត្រ",
   redAlt: "អ្នកលេងក្រហមកំពុងទាញព្រ័ត្រ",
-  hint: "ឆ្លើយឱ្យបានត្រឹមត្រូវដើម្បីទាញព្រ័ត្រ។ អ្នកទាញសញ្ញាសម្គាល់មកដល់ខាងខ្លួនបានមុន គឺជាអ្នកឈ្នះ។",
   metaTitle: "ល្បែងទាញព្រ័ត្រគណិតវិទ្យា",
   metaTitleFull: "ល្បែងទាញព្រ័ត្រគណិតវិទ្យា — ល្បែងគណិត ២ នាក់",
   metaDescription:
@@ -30,4 +27,17 @@ export const km = {
   pageLoadFailedBody:
     "មានបញ្ហា! សូមព្យាយាមផ្ទុកឡើងវិញ ឬត្រលប់ទៅទំព័រដើម។",
   tryAgain: "ព្យាយាមម្តងទៀត",
+  qrDevPreviewHint: "DEV — QR សម្រាប់មើល UI ប៉ុណ្ណោះ (ទូរស័ព្ទមិនអាចចូលបាន)",
+  controllerDevPreviewHint:
+    "DEV — បន្ថែម ?preview=claimed នៅចុង URL ដើម្បីមើល UI ក្រោយភ្ជាប់",
+  close: "ត្រលប់",
+  qrScanToJoin: "ស្កេនដើម្បីចូលលេង",
+  qrClaimed: "បានភ្ជាប់ទូរសព្ទជោគជ័យ!",
+  qrClaimedHint: "ក្រុមនេះបានភ្ជាប់ជាមួយទូរសព្ទរួចរាល់។",
+  controllerConnecting: "កំពុងភ្ជាប់…",
+  controllerReconnecting: "កំពុងភ្ជាប់ឡើងវិញ…",
+  controllerClaimed: "រួចរាល់ — វាយចម្លើយ",
+  controllerAlreadyUsed: "QR នេះត្រូវបានប្រើរួចហើយ។ សូមប្រើទូរស័ព្ទដែលបានភ្ជាប់។",
+  controllerInvalid: "QR មិនត្រឹមត្រូវ។",
+  controllerRoomExpired: "បន្ទប់បានផុតកំណត់។ សូមស្កេន QR ថ្មីពីអេក្រង់គ្រូ។",
 } as const;

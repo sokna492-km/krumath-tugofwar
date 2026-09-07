@@ -1,26 +1,51 @@
 # krumath-tugofwar
 
-Build a minimalist, fun multiplayer math game inspired by the attached screenshot. Create a 2-player Tug of War game where each player gets a math question and enters the answer using an on-screen numeric keypad. Correct answers pull the rope toward that player's side; the first player to pull the center marker to their side wins.
+Two-player math tug-of-war for Grade 4–12. Each player answers questions on an on-screen keypad; correct answers pull the rope toward their side. First to pull the center marker all the way wins.
 
-Include: two colored player panels, random math questions, numeric keypad (0–9, Clear, OK), animated rope/characters, center progress marker, score/winner screen, and a Play Again button. Make it responsive for desktop/tablet and suitable for Grade 4–12 students. Keep the UI clean, modern, colorful, and engaging with very little text. Use the attached screenshot as the visual reference, but create an original implementation.
+Khmer UI. Digits and math symbols stay Western.
 
-This project was built with [Lovable](https://lovable.dev).
+Classroom mode: each team header shows a QR code. One phone per team scans and types answers; the projector keypad for that side locks. Touch-screen TVs still work with no setup if nobody claims.
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/b42b3baa-b386-4177-9915-7fb9cd879ecc).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Deployed as `krumath.com/tugofwar` (see [KRUMATH_GAME_INTEGRATION.md](./KRUMATH_GAME_INTEGRATION.md)).
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requires Node.js and npm.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
 npm i
+cp .env.example .env   # fill VITE_SUPABASE_* for auth (skipped on DEV host gate)
 npm run dev
 ```
+
+App base path is `/tugofwar/` — open `http://localhost:<port>/tugofwar/`.
+
+Other scripts:
+
+```sh
+npm test        # unit tests (game + room protocol)
+npm run build   # production build
+npm run lint    # eslint
+```
+
+Phone QR rooms need Durable Objects (Cloudflare). Local Vite without DO falls back to on-screen keypads only; validate QR on the deployed Worker.
+
+## Operator checklist (Cloudflare + home link)
+
+Feature-repo work stops after deploy. Do **not** edit the KruMath monorepo from this task.
+
+1. Build with Supabase env: `npm run build` (or `npm run deploy` / `wrangler deploy`).
+2. Deploy Worker `krumath-tugofwar` (Durable Object class `TugRoom`, binding `TUG_ROOMS`).
+3. Cloudflare hostname route (more specific than the main site Worker):
+
+   ```text
+   krumath.com/tugofwar*  →  krumath-tugofwar
+   ```
+
+4. Smoke-test:
+   - Signed-out host → `/sign-in?returnUrl=/tugofwar`
+   - Signed-in host → game + QR in headers
+   - Scan QR on phone → keypad; second scan → already used
+   - Assets at `/tugofwar/assets/...`
+
+5. **Maintainer (Phase C, separate PR):** add home entry on `krumath.com/home` linking to `/tugofwar`.

@@ -10,33 +10,69 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiRoomRoomIdRouteImport } from './routes/api/room.$roomId'
+import { Route as ApiRoomCreateRouteImport } from './routes/api/room.create'
+import { Route as CRoomIdClaimTokenRouteImport } from './routes/c.$roomId.$claimToken'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiRoomRoomIdRoute = ApiRoomRoomIdRouteImport.update({
+  id: '/api/room/$roomId',
+  path: '/api/room/$roomId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiRoomCreateRoute = ApiRoomCreateRouteImport.update({
+  id: '/api/room/create',
+  path: '/api/room/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CRoomIdClaimTokenRoute = CRoomIdClaimTokenRouteImport.update({
+  id: '/c/$roomId/$claimToken',
+  path: '/c/$roomId/$claimToken',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/room/$roomId': typeof ApiRoomRoomIdRoute
+  '/api/room/create': typeof ApiRoomCreateRoute
+  '/c/$roomId/$claimToken': typeof CRoomIdClaimTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/room/$roomId': typeof ApiRoomRoomIdRoute
+  '/api/room/create': typeof ApiRoomCreateRoute
+  '/c/$roomId/$claimToken': typeof CRoomIdClaimTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/room/$roomId': typeof ApiRoomRoomIdRoute
+  '/api/room/create': typeof ApiRoomCreateRoute
+  '/c/$roomId/$claimToken': typeof CRoomIdClaimTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/api/room/$roomId' | '/api/room/create' | '/c/$roomId/$claimToken'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/room/$roomId' | '/api/room/create' | '/c/$roomId/$claimToken'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/room/$roomId'
+    | '/api/room/create'
+    | '/c/$roomId/$claimToken'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiRoomRoomIdRoute: typeof ApiRoomRoomIdRoute
+  ApiRoomCreateRoute: typeof ApiRoomCreateRoute
+  CRoomIdClaimTokenRoute: typeof CRoomIdClaimTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +84,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/room/$roomId': {
+      id: '/api/room/$roomId'
+      path: '/api/room/$roomId'
+      fullPath: '/api/room/$roomId'
+      preLoaderRoute: typeof ApiRoomRoomIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/room/create': {
+      id: '/api/room/create'
+      path: '/api/room/create'
+      fullPath: '/api/room/create'
+      preLoaderRoute: typeof ApiRoomCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$roomId/$claimToken': {
+      id: '/c/$roomId/$claimToken'
+      path: '/c/$roomId/$claimToken'
+      fullPath: '/c/$roomId/$claimToken'
+      preLoaderRoute: typeof CRoomIdClaimTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiRoomRoomIdRoute: ApiRoomRoomIdRoute,
+  ApiRoomCreateRoute: ApiRoomCreateRoute,
+  CRoomIdClaimTokenRoute: CRoomIdClaimTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

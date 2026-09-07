@@ -1,9 +1,5 @@
 import { WIN_PULLS } from "@/lib/constants";
-import {
-  makeQuestion,
-  type GradeBand,
-  type Question,
-} from "@/lib/math";
+import { makeQuestion, type GradeBand, type Question } from "@/lib/math";
 
 export type Side = "blue" | "red";
 
@@ -34,7 +30,7 @@ export type GameAction =
   | { type: "playAgain" }
   | { type: "resetAll" };
 
-export const freshSide = (band: GradeBand, score = 0): SideState => ({
+const freshSide = (band: GradeBand, score = 0): SideState => ({
   question: makeQuestion(band),
   input: "",
   score,
@@ -51,19 +47,13 @@ export const createInitialState = (band: GradeBand = "4-5"): GameState => ({
   winner: null,
 });
 
-const getSide = (state: GameState, side: Side) =>
-  side === "blue" ? state.blue : state.red;
+const getSide = (state: GameState, side: Side) => (side === "blue" ? state.blue : state.red);
 
-const withSide = (
-  state: GameState,
-  side: Side,
-  next: SideState,
-): GameState =>
+const withSide = (state: GameState, side: Side, next: SideState): GameState =>
   side === "blue" ? { ...state, blue: next } : { ...state, red: next };
 
 /** Grade chips only change an idle rope (center, no winner). */
-export const canChangeGrade = (state: GameState) =>
-  state.position === 0 && state.winner === null;
+export const canChangeGrade = (state: GameState) => state.position === 0 && state.winner === null;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -109,8 +99,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         });
       }
 
-      const nextPos =
-        action.side === "blue" ? state.position - 1 : state.position + 1;
+      const nextPos = action.side === "blue" ? state.position - 1 : state.position + 1;
       const won = Math.abs(nextPos) >= WIN_PULLS;
 
       return {
